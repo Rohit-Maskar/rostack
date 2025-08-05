@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CourseModuleResponseDto implements CourseModuleDto {
-    private Long id;
+    private Long courseId;
     private String title;
     private Integer sequence;
 }
