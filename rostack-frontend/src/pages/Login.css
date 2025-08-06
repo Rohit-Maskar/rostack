@@ -1,0 +1,5 @@
+/* index.css or Login.css (import if needed) */
+.login-background {
+  background: linear-gradient(135deg, #d4b6ee, #90409c);
+  min-height: 100vh;
+}

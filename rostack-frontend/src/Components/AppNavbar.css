@@ -1,0 +1,37 @@
+.app-navbar {
+  background: linear-gradient(to right, #ffafbd, #ffc3a0); /* pink-orange Gen Z gradient */
+  font-family: 'Poppins', sans-serif;
+}
+
+.brand-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #212529;
+}
+
+.nav-link-custom {
+  color: #212529;
+  margin-left: 1rem;
+  font-weight: 500;
+  position: relative;
+  transition: color 0.3s ease;
+}
+
+.nav-link-custom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 2px;
+  background-color: #212529;
+  transition: width 0.3s ease;
+}
+
+.nav-link-custom:hover {
+  color: #000;
+}
+
+.nav-link-custom:hover::after {
+  width: 100%;
+}
