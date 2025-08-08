@@ -1,18 +1,44 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Components/AuthContext';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '', email: '', password: ''
+    name: '', email: '', phone: '', password: ''
   });
+
+  const navigate = useNavigate();
+
+  const { setRole } = useAuth();
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Register form submitted:', formData);
     // TODO: Send register data to backend
+    setError('');
+    setSuccess('');
+
+    try {
+      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+      setSuccess('User registered successfully!');
+      const { token, userDetails } = response.data;
+      const role = userDetails.authorities[0].authority; 
+      localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
+      setRole(role)
+      navigate(`/`);
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Registration failed.');
+    }
   };
 
   return (
@@ -37,6 +63,16 @@ const Register = () => {
                 type="email"
                 name="email"
                 value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="tel"
+                name="phone"
+                value={formData.phone}
                 onChange={handleChange}
                 required
               />

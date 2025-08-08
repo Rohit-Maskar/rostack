@@ -3,9 +3,10 @@ package com.rostack.elearn.controller;
 import com.razorpay.Order;
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
-import com.rostack.elearn.DTO.PaymentResponseDto;
+import com.rostack.elearn.DTO.payment.PaymentResponseDto;
 import com.rostack.elearn.config.RazorPayConfig;
 import com.rostack.elearn.service.impl.EmailService;
+import com.rostack.elearn.service.impl.RazorPayService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,9 @@ public class RazorPayController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private RazorPayService razorPayService;
+
     @PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestBody Map<String, Object> data) throws RazorpayException {
         int amount = (int) data.get("amount"); // in paise
@@ -37,12 +41,13 @@ public class RazorPayController {
         options.put("currency", "INR");
         options.put("receipt", "txn_" + System.currentTimeMillis());
 
-        Order order = client.orders.create(options);
+        Order razorOrder = client.orders.create(options);
+       razorPayService.saveRazorPayOrder(razorOrder);
 
         Map<String, Object> response = new HashMap<>();
-        response.put("orderId", order.get("id"));
-        response.put("amount", order.get("amount"));
-        response.put("currency", order.get("currency"));
+        response.put("orderId", razorOrder.get("id"));
+        response.put("amount", razorOrder.get("amount"));
+        response.put("currency", razorOrder.get("currency"));
 
         return ResponseEntity.ok(response);
     }
@@ -51,6 +56,7 @@ public class RazorPayController {
     public ResponseEntity<?> verifyPayment(@RequestBody PaymentResponseDto paymentResponse) {
         // Validate Razorpay signature (optional, recommended)
         // Save payment ID, user info, course ID, amount etc.
+        razorPayService.saveRazorPayPayment(paymentResponse);
         String driveLink = "https://drive.google.com/drive/folder/abc123"; // static or dynamic per course
         emailService.sendCourseAccessEmail(paymentResponse.getEmail(), paymentResponse.getCourseName(), driveLink);
         return ResponseEntity.ok(Map.of("message", "Payment recorded"));

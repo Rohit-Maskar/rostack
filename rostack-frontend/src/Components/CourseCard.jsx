@@ -5,9 +5,16 @@ import { useNavigate } from 'react-router-dom';
 const CourseCard = ({ course }) => {
 
   const navigate = useNavigate();
-
+  const token = localStorage.getItem('token')
   const handleClick = () => {
-    navigate(`/enroll/${encodeURIComponent(course.title)}`, { state: course });
+
+    if (token) {
+      // User is logged in, go to payment page
+      navigate(`/payment/${encodeURIComponent(course.title)}`,{state: course});
+    } else {
+      // User is not logged in, go to enrollment form
+      navigate(`/enroll/${encodeURIComponent(course.title)}`, { state: course });
+    }
   };
 
 

@@ -24,11 +24,16 @@ public class Payment {
     private Order order;
 
     private String gateway; // Razorpay, Stripe
-    private String txnId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
     private LocalDateTime paidAt;
+
+    private String razorPaymentId;
+
+    private String razorPayOrderId;
+
+    private String razorPaySignature;
 }
 

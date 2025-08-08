@@ -1,6 +1,6 @@
 package com.rostack.elearn.service.impl;
 
-import com.rostack.elearn.DTO.RegisterRequestDto;
+import com.rostack.elearn.DTO.user.RegisterRequestDto;
 import com.rostack.elearn.dao.RoleRepository;
 import com.rostack.elearn.dao.UserRepository;
 import com.rostack.elearn.dao.UserRoleRepository;
@@ -30,18 +30,20 @@ public class AuthService {
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setCreatedAt(LocalDateTime.now());
 
         user = userRepository.save(user);
 
-        Role role = roleRepository.findById(1) // assuming 1 = STUDENT
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findById(1).get(); // assuming 1 = STUDENT
+               // .orElseThrow(() -> new RuntimeException("Role not found"));
 
         UserRole userRole = new UserRole();
         userRole.setUser(user);
         userRole.setRole(role);
 
         userRoleRepository.save(userRole);
+        userRepository.flush();
     }
 }

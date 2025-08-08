@@ -31,7 +31,6 @@ public class PaymentService {
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setGateway(gateway);
-        payment.setTxnId(txnId);
         payment.setStatus(isSuccess ? PaymentStatus.SUCCESS : PaymentStatus.FAILED);
         payment.setPaidAt(LocalDateTime.now());
 

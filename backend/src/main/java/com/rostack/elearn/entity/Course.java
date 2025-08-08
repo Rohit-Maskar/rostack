@@ -32,6 +32,6 @@ public class Course {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CourseModule> modules = new ArrayList<>();
 }

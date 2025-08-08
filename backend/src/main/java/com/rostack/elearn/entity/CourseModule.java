@@ -27,6 +27,6 @@ public class CourseModule {
     private String title;
     private Integer sequence;
 
-    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Resource> resources = new ArrayList<>();
 }

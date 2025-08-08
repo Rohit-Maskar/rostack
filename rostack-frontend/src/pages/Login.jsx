@@ -3,6 +3,7 @@ import { Container, Form, Button } from 'react-bootstrap';
 import './Login.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Components/AuthContext';
 
 
 const Login = () => {
@@ -10,6 +11,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+
+  const { setRole } = useAuth();
 
 
   const handleChange = (e) =>
@@ -24,12 +27,16 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8080/api/auth/login', formData);
 
-      const { token } = response.data;
+      const { token, userDetails } = response.data;
+      const role = userDetails.authorities[0].authority; // This will be "ROLE_ADMIN" or "ROLE_USER"
 
+      console.log("response data after login"+ response.data)
       // Store token in localStorage
       localStorage.setItem('token', token);
+      localStorage.setItem('role', role);
 
       setSuccess('Login successful!');
+       setRole(role)
       navigate('/')
 
     } catch (err) {

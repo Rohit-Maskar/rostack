@@ -23,6 +23,9 @@ public class Order {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "razorpay_order_id", unique = true)
+    private String razorpayOrderId;
+
     private Double totalAmount;
 
     @Enumerated(EnumType.STRING)

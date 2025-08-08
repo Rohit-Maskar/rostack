@@ -1,7 +1,7 @@
 package com.rostack.elearn.service.impl;
 
-import com.rostack.elearn.DTO.CourseModuleRequestDto;
-import com.rostack.elearn.DTO.CourseModuleResponseDto;
+import com.rostack.elearn.DTO.course.CourseModuleRequestDto;
+import com.rostack.elearn.DTO.course.CourseModuleResponseDto;
 import com.rostack.elearn.dao.CourseModuleRepository;
 import com.rostack.elearn.dao.CourseRepository;
 import com.rostack.elearn.entity.Course;

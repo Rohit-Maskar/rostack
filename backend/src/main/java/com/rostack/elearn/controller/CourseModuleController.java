@@ -1,8 +1,7 @@
 package com.rostack.elearn.controller;
 
-import com.rostack.elearn.DTO.CourseModuleDto;
-import com.rostack.elearn.DTO.CourseModuleRequestDto;
-import com.rostack.elearn.DTO.CourseModuleResponseDto;
+import com.rostack.elearn.DTO.course.CourseModuleRequestDto;
+import com.rostack.elearn.DTO.course.CourseModuleResponseDto;
 import com.rostack.elearn.entity.CourseModule;
 import com.rostack.elearn.service.CourseModuleService;
 import lombok.RequiredArgsConstructor;

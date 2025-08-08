@@ -1,8 +1,8 @@
 package com.rostack.elearn.controller;
 
-import com.rostack.elearn.DTO.AuthRequest;
-import com.rostack.elearn.DTO.AuthResponse;
-import com.rostack.elearn.DTO.RegisterRequestDto;
+import com.rostack.elearn.DTO.user.AuthRequestDto;
+import com.rostack.elearn.DTO.user.AuthResponseDto;
+import com.rostack.elearn.DTO.user.RegisterRequestDto;
 import com.rostack.elearn.service.impl.AuthService;
 import com.rostack.elearn.service.impl.CustomUserDetailsService;
 import com.rostack.elearn.util.JwtUtil;
@@ -30,20 +30,26 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponseDto> login(@RequestBody AuthRequestDto request) {
         Authentication authentication = authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
         String token = jwtUtil.generateToken(userDetails);
-        return ResponseEntity.ok(new AuthResponse(token));
+        return ResponseEntity.ok(new AuthResponseDto(token, userDetails,"User logged in successfully!"));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDto request) {
         authService.registerUser(request);
-        return ResponseEntity.ok("User registered successfully");
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        UserDetails userDetails = userDetailsService.loadUserByUsername(request.getEmail());
+        String token = jwtUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new AuthResponseDto(token, userDetails,"User registered successfully!"));
+
     }
 }
 

@@ -1,6 +1,6 @@
 package com.rostack.elearn.controller;
 
-import com.rostack.elearn.DTO.ResourceDto;
+import com.rostack.elearn.DTO.course.ResourceRequestDto;
 import com.rostack.elearn.entity.Resource;
 import com.rostack.elearn.service.ResourceService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class ResourceController {
     // 🔹 Add resource to module
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> addResource(@RequestBody ResourceDto resource) {
+    public ResponseEntity<?> addResource(@RequestBody ResourceRequestDto resource) {
         return ResponseEntity.ok(resourceService.createResource(resource));
     }
 

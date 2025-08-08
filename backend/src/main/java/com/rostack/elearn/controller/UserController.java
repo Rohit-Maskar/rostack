@@ -1,6 +1,6 @@
 package com.rostack.elearn.controller;
 
-import com.rostack.elearn.DTO.UserResponseDto;
+import com.rostack.elearn.DTO.user.UserResponseDto;
 import com.rostack.elearn.dao.UserRepository;
 import com.rostack.elearn.entity.User;
 import lombok.RequiredArgsConstructor;
