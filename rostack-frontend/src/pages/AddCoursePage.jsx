@@ -25,6 +25,45 @@ const AddCoursePage = () => {
     setCourse({ ...course, modules: updatedModules })
   }
 
+  const removeModule = () => {
+    setCourse(prev => ({
+      ...prev,
+      modules: prev.modules.slice(0, -1)
+    }))
+  }
+
+  const removeResource = (moduleIdx) => {
+    const updatedModules = [...course.modules]
+    updatedModules[moduleIdx].resources = updatedModules[moduleIdx].resources.slice(0, -1)
+    setCourse({ ...course, modules: updatedModules })
+  }
+
+  const [thumbnailFile, setThumbnailFile] = useState(null)
+
+  const uploadThumbnail = async () => {
+    if (!thumbnailFile) return
+    const formData = new FormData()
+    formData.append('file', thumbnailFile)
+
+    try {
+      const token = localStorage.getItem('token')
+      const res = await axios.post('http://localhost:8080/api/courses/upload/thumbnail', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      setCourse(prev => ({ ...prev, thumbnail: res.data.url }))
+      toast.success('📸 Thumbnail uploaded successfully!')
+    } catch (err) {
+      console.error(err)
+      toast.error('❌ Thumbnail upload failed')
+    }
+  }
+
+
+
   const handleChange = (e, moduleIdx, resourceIdx, fieldType) => {
     const { name, value } = e.target
     if (moduleIdx === undefined) {
@@ -76,11 +115,30 @@ const AddCoursePage = () => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Thumbnail URL</Form.Label>
-          <Form.Control name="thumbnail" value={course.thumbnail} onChange={handleChange} />
+          <Form.Label>Course Thumbnail</Form.Label>
+          <div className="d-flex align-items-center gap-3">
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setThumbnailFile(e.target.files[0])}
+            />
+            <Button variant="outline-primary" onClick={uploadThumbnail} disabled={!thumbnailFile}>
+              Upload
+            </Button>
+          </div>
+          {course.thumbnail && (
+            <div className="mt-2">
+              <img src={course.thumbnail} alt="Thumbnail Preview" width="200" className="rounded shadow" />
+            </div>
+          )}
         </Form.Group>
 
-        <Button variant="outline-primary" onClick={addModule}>+ Add Module</Button>
+
+        <div className="my-3 d-flex gap-2">
+          <Button variant="outline-primary" onClick={addModule}>+ Add Module</Button>
+          <Button variant="outline-danger" onClick={removeModule} disabled={course.modules.length === 0}>− Remove Module</Button>
+        </div>
+
 
         {course.modules.map((module, mIdx) => (
           <Card key={mIdx} className="my-3 p-3">
@@ -93,7 +151,17 @@ const AddCoursePage = () => {
               <Form.Control type="number" value={module.sequence} name="sequence" onChange={(e) => handleChange(e, mIdx)} />
             </Form.Group>
 
-            <Button variant="outline-success" onClick={() => addResource(mIdx)}>+ Add Resource</Button>
+            <div className="d-flex gap-2 mb-2">
+              <Button variant="outline-success" onClick={() => addResource(mIdx)}>+ Add Resource</Button>
+              <Button
+                variant="outline-danger"
+                onClick={() => removeResource(mIdx)}
+                disabled={module.resources.length === 0}
+              >
+                − Remove Resource
+              </Button>
+            </div>
+
 
             {module.resources.map((res, rIdx) => (
               <Card key={rIdx} className="mt-2 p-2 bg-light">
@@ -122,7 +190,14 @@ const AddCoursePage = () => {
           </Card>
         ))}
 
-        <Button variant="primary" onClick={submitCourse}>Save Course</Button>
+        <div className="d-flex justify-content-between mt-4">
+          <Button variant="secondary" onClick={() => window.history.back()}>
+            ← Back
+          </Button>
+          <Button variant="primary" onClick={submitCourse}>
+            Save Course
+          </Button>
+        </div>
       </Form>
     </Container>
   )

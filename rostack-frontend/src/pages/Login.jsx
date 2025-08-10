@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import './Login.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../Components/AuthContext';
 
 
@@ -11,7 +11,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
-
+  const location = useLocation();
   const { setRole } = useAuth();
 
 
@@ -30,13 +30,22 @@ const Login = () => {
       const { token, userDetails } = response.data;
       const role = userDetails.authorities[0].authority; // This will be "ROLE_ADMIN" or "ROLE_USER"
 
-      console.log("response data after login"+ response.data)
+      console.log("response data after login" + response.data)
       // Store token in localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
 
       setSuccess('Login successful!');
-       setRole(role)
+      setRole(role)
+      // Check if came from enroll page
+      if (location.state?.fromEnroll && location.state?.course) {
+        navigate(`/payment/${encodeURIComponent(location.state.course.title)}`, {
+          state: { course: location.state.course }
+        });
+      } else {
+        navigate('/');
+      }
+
       navigate('/')
 
     } catch (err) {
@@ -48,6 +57,8 @@ const Login = () => {
   return (
     <div className="login-background py-5">
       <Container style={{ maxWidth: '500px' }}>
+        {error && <div className="alert alert-danger">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
         <div className="p-4 rounded shadow border bg-white">
           <h3 className="mb-4 text-center">Login</h3>
           <Form onSubmit={handleSubmit}>

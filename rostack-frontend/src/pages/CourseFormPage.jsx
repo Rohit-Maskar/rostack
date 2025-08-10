@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Form, Button, Card, Row, Col } from 'react-bootstrap';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import axiosInstance from '../util/AxiosInstance';
 
 const CourseFormPage = ({ mode }) => {
   const { id } = useParams();
@@ -27,7 +28,7 @@ const CourseFormPage = ({ mode }) => {
     const fetchCourse = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(`http://localhost:8080/api/courses/${id}`, {
+        const res = await axiosInstance.get(`http://localhost:8080/api/courses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourse(res.data);
@@ -52,6 +53,28 @@ const CourseFormPage = ({ mode }) => {
     const key = `${mIdx}_${rIdx}`;
     setExpandedResources((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+  const [thumbnailFile, setThumbnailFile] = useState(null)
+  const uploadThumbnail = async () => {
+    if (!thumbnailFile) return
+    const formData = new FormData()
+    formData.append('file', thumbnailFile)
+
+    try {
+      const token = localStorage.getItem('token')
+      const res = await axios.post('http://localhost:8080/api/courses/upload/thumbnail', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+
+      setCourse(prev => ({ ...prev, thumbnail: res.data.url }))
+      toast.success('📸 Thumbnail uploaded successfully!')
+    } catch (err) {
+      console.error(err)
+      toast.error('❌ Thumbnail upload failed')
+    }
+  }
 
   const handleChange = (e, mIdx, rIdx) => {
     const { name, value } = e.target;
@@ -146,13 +169,22 @@ const CourseFormPage = ({ mode }) => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Thumbnail URL</Form.Label>
-          <Form.Control
-            name="thumbnail"
-            value={course.thumbnail}
-            onChange={handleChange}
-            readOnly={isDetails}
-          />
+          <Form.Label>Course Thumbnail</Form.Label>
+          <div className="d-flex align-items-center gap-3">
+            <Form.Control
+              type="file"
+              accept="image/*"
+              onChange={(e) => setThumbnailFile(e.target.files[0])}
+            />
+            <Button variant="outline-primary" onClick={uploadThumbnail} disabled={!thumbnailFile}>
+              Upload
+            </Button>
+          </div>
+          {course.thumbnail && (
+            <div className="mt-2">
+              <img src={`http://localhost:8080/${course.thumbnail}`} alt="Thumbnail Preview" width="200" height="200" className="rounded shadow" />
+            </div>
+          )}
         </Form.Group>
 
         {isEdit && (

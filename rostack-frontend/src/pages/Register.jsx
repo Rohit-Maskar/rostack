@@ -30,20 +30,37 @@ const Register = () => {
       const response = await axios.post('http://localhost:8080/api/auth/register', formData);
       setSuccess('User registered successfully!');
       const { token, userDetails } = response.data;
-      const role = userDetails.authorities[0].authority; 
+      const role = userDetails.authorities[0].authority;
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       setRole(role)
       navigate(`/`);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || 'Registration failed.');
+      if (err.response?.data) {
+        const { status, message, error } = err.response.data;
+
+        // Example: status=409 => email already in use
+        if (status === 409) {
+          setError(message || 'Email already in use');
+        } else if (status === 400) {
+          setError(message || 'Validation error');
+        } else if (status === 401) {
+          setError('Invalid email or password');
+        } else {
+          setError(message || 'Something went wrong');
+        }
+      } else {
+        setError('Server not responding. Please try again later.');
+      }
     }
   };
 
   return (
     <div className="register-background py-5">
       <Container style={{ maxWidth: '500px' }}>
+        {error && <div className="alert alert-danger">{error}</div>}
+        {success && <div className="alert alert-success">{success}</div>}
         <div className="p-4 rounded shadow border bg-white">
           <h3 className="mb-4 text-center">Register</h3>
           <Form onSubmit={handleSubmit}>

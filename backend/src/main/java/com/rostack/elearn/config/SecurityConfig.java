@@ -34,7 +34,7 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/h2-console/**", "/api/home/**", "/uploads/thumbnails/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

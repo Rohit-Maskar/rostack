@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../util/AxiosInstance'
 
 const CheckoutButton = ({ amount }) => {
   const [showThankYou, setShowThankYou] = useState(false)
@@ -9,7 +10,7 @@ const CheckoutButton = ({ amount }) => {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem('token')
-      const res = await axios.post('http://localhost:8080/api/payment/create-order', {
+      const res = await axiosInstance.post('http://localhost:8080/api/payment/create-order', {
         amount: amount * 100, // convert to paise
       }, {
         headers: {

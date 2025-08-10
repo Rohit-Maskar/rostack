@@ -7,6 +7,7 @@ import com.rostack.elearn.dao.UserRoleRepository;
 import com.rostack.elearn.entity.Role;
 import com.rostack.elearn.entity.User;
 import com.rostack.elearn.entity.UserRole;
+import com.rostack.elearn.exception.ResourceAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class AuthService {
 
     public void registerUser(RegisterRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
+            throw new ResourceAlreadyExistsException("Email already in use");
         }
 
         User user = new User();
@@ -42,6 +43,8 @@ public class AuthService {
         UserRole userRole = new UserRole();
         userRole.setUser(user);
         userRole.setRole(role);
+
+        user.getUserRoles().add(userRole);
 
         userRoleRepository.save(userRole);
         userRepository.flush();

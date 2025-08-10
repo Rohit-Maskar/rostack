@@ -20,7 +20,7 @@ const CourseCard = ({ course }) => {
 
   return (
     <Card onClick={handleClick} style={{ cursor: 'pointer' }} className="h-100 shadow-sm">
-      <Card.Img variant="top" src={course.thumbnail} />
+      <Card.Img variant="top"  src={`http://localhost:8080/${course.thumbnail}`} />
       <Card.Body>
         <Card.Title>{course.title}</Card.Title>
         <Card.Text>{course.description}</Card.Text>
