@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { Container, Form, Button, Card } from 'react-bootstrap'
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../util/AxiosInstance'
 
 const AddCoursePage = () => {
   const [course, setCourse] = useState({
@@ -11,6 +13,8 @@ const AddCoursePage = () => {
     thumbnail: '',
     modules: []
   })
+
+  const navigate = useNavigate();
 
   const addModule = () => {
     setCourse(prev => ({
@@ -44,10 +48,11 @@ const AddCoursePage = () => {
     if (!thumbnailFile) return
     const formData = new FormData()
     formData.append('file', thumbnailFile)
+    formData.append('courseId', -1)
 
     try {
       const token = localStorage.getItem('token')
-      const res = await axios.post('http://localhost:8080/api/courses/upload/thumbnail', formData, {
+      const res = await axiosInstance.post('/courses/upload/thumbnail', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -82,12 +87,13 @@ const AddCoursePage = () => {
   const submitCourse = async () => {
     try {
       const token = localStorage.getItem('token')
-      await axios.post('http://localhost:8080/api/courses', course, {
+      await axiosInstance.post('/courses', course, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
       toast.success('✅ Course added successfully!')
+      navigate('/admin/courses')
     } catch (err) {
       console.error(err)
       toast.error('❌ Failed to add course')

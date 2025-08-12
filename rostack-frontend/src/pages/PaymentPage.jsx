@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Alert } from 'react-bootstrap';
 import { useLocation } from 'react-router-dom';
-import CheckoutButton from '../Components/CheckoutButton';
+import CheckoutButton from '../components/CheckoutButton';
 
 const PaymentPage = () => {
   const location = useLocation();

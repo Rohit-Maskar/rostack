@@ -2,7 +2,8 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../Components/AuthContext';
+import { useAuth } from '../components/AuthContext';
+import axiosInstance from '../util/AxiosInstance';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const Register = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/register', formData);
+      const response = await axiosInstance.post('/auth/register', formData);
       setSuccess('User registered successfully!');
       const { token, userDetails } = response.data;
       const role = userDetails.authorities[0].authority;

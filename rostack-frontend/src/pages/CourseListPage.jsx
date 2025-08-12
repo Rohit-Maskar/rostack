@@ -3,6 +3,7 @@ import axios from 'axios'
 import { Button, Container, Table } from 'react-bootstrap'
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../util/AxiosInstance'
 
 const CourseListPage = () => {
   const [courses, setCourses] = useState([])
@@ -11,7 +12,7 @@ const CourseListPage = () => {
   const fetchCourses = async () => {
     try {
       const token = localStorage.getItem('token')
-      const res = await axios.get('http://localhost:8080/api/courses', {
+      const res = await axiosInstance.get('/courses', {
         headers: { Authorization: `Bearer ${token}` }
       })
       setCourses(res.data)
@@ -25,7 +26,7 @@ const CourseListPage = () => {
     if (!window.confirm('Are you sure you want to delete this course?')) return
     try {
       const token = localStorage.getItem('token')
-      await axios.delete(`http://localhost:8080/api/courses/${courseId}`, {
+      await axiosInstance.delete(`/courses/${courseId}`, {
         headers: { Authorization: `Bearer ${token}` }
       })
       toast.success('✅ Course deleted')

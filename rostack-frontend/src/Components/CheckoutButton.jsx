@@ -10,7 +10,7 @@ const CheckoutButton = ({ amount }) => {
   const handlePayment = async () => {
     try {
       const token = localStorage.getItem('token')
-      const res = await axiosInstance.post('http://localhost:8080/api/payment/create-order', {
+      const res = await axiosInstance.post('/payment/create-order', {
         amount: amount * 100, // convert to paise
       }, {
         headers: {
@@ -36,8 +36,8 @@ const CheckoutButton = ({ amount }) => {
           try {
             const token = localStorage.getItem('token');
 
-            await axios.post(
-              'http://localhost:8080/api/payment/verify',
+            await axiosInstance.post(
+              '/payment/verify',
               {
                 paymentId: response.razorpay_payment_id,
                 orderId: response.razorpay_order_id,

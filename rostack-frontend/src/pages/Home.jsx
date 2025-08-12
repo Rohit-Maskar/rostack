@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import CourseCard from '../components/CourseCard';
+
 import axios from 'axios';
+import CourseCard from '../components/CourseCard';
+import axiosInstance from '../util/AxiosInstance';
 
 const Home = () => {
   const [courses, setCourses] = useState([]);
@@ -9,7 +11,7 @@ const Home = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('token')
-    axios.get('http://localhost:8080/api/home/courses') // ✅ update with correct base URL if needed
+    axiosInstance.get('/home/courses') // ✅ update with correct base URL if needed
       .then(response => {
         setCourses(response.data);
         setLoading(false);

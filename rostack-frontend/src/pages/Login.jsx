@@ -3,7 +3,8 @@ import { Container, Form, Button } from 'react-bootstrap';
 import './Login.css';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../Components/AuthContext';
+import { useAuth } from '../components/AuthContext';
+import axiosInstance from '../util/AxiosInstance';
 
 
 const Login = () => {
@@ -25,7 +26,7 @@ const Login = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:8080/api/auth/login', formData);
+      const response = await axiosInstance.post('/auth/login', formData);
 
       const { token, userDetails } = response.data;
       const role = userDetails.authorities[0].authority; // This will be "ROLE_ADMIN" or "ROLE_USER"
@@ -45,8 +46,6 @@ const Login = () => {
       } else {
         navigate('/');
       }
-
-      navigate('/')
 
     } catch (err) {
       console.error(err);

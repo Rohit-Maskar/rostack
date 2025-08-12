@@ -10,17 +10,28 @@ const CourseCard = ({ course }) => {
 
     if (token) {
       // User is logged in, go to payment page
-      navigate(`/payment/${encodeURIComponent(course.title)}`,{state: course});
+      navigate(`/payment/${encodeURIComponent(course.title)}`, { state: course });
     } else {
       // User is not logged in, go to enrollment form
       navigate(`/enroll/${encodeURIComponent(course.title)}`, { state: course });
     }
   };
 
-
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
   return (
     <Card onClick={handleClick} style={{ cursor: 'pointer' }} className="h-100 shadow-sm">
-      <Card.Img variant="top"  src={`http://localhost:8080/${course.thumbnail}`} />
+      <div style={{ width: '100%', height: '300px', overflow: 'hidden' }}>
+        <img
+          src={`/${course.thumbnail}`}
+          alt={course.title}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover', // change to "contain" if you want to see the whole image with no cropping
+          }}
+        />
+      </div>
+
       <Card.Body>
         <Card.Title>{course.title}</Card.Title>
         <Card.Text>{course.description}</Card.Text>

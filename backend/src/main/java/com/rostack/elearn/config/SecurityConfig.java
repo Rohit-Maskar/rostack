@@ -4,6 +4,7 @@ import com.rostack.elearn.filter.JwtRequestFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -34,7 +35,8 @@ public class SecurityConfig {
         http
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/h2-console/**", "/api/home/**", "/uploads/thumbnails/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/h2-console/**", "/api/home/**", "/api/uploads/thumbnails/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -64,7 +66,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173")); // or 3000 if needed
+        configuration.setAllowedOrigins(List.of("http://localhost:3000","http://localhost:5173","https://heetro.com")); // or 3000 if needed
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);

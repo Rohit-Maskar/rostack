@@ -17,7 +17,7 @@ const AppNavbar = () => {
   return (
     <Navbar expand="lg" className="app-navbar border-bottom shadow-sm">
       <Container>
-        <Navbar.Brand href="/" className="brand-text">📚 dhisMas</Navbar.Brand>
+        <Navbar.Brand href="/" className="brand-text">📚 Heetro</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav className="ms-auto align-items-center">

@@ -1,14 +1,14 @@
 import { useState } from 'react'
-import AppNavbar from './Components/AppNavbar'
-import AdminNavBar from './Components/AdminNavBar'
+import AppNavbar from './components/AppNavbar'
+import AdminNavBar from './components/AdminNavBar'
 import Home from './pages/Home'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login'
 import Register from './pages/Register'
-import EnrollForm from './Components/EnrollForm'
+import EnrollForm from './components/EnrollForm'
 import PaymentPage from './pages/PaymentPage'
 import { ToastContainer } from 'react-toastify';
-import { useAuth } from './Components/AuthContext'
+import { useAuth } from './components/AuthContext'
 import AddCoursePage from './pages/AddCoursePage';
 import CourseListPage from './pages/CourseListPage';
 import CourseFormPage from './pages/CourseFormPage';

@@ -21,7 +21,7 @@ import java.util.Map;
 @RequestMapping("/api/courses")
 @RequiredArgsConstructor
 public class CourseController {
-
+    @Autowired
     private final CourseService courseService;
 
     @Autowired
@@ -43,9 +43,9 @@ public class CourseController {
     }
 
     @PostMapping("/upload/thumbnail")
-    public ResponseEntity<Map<String, String>> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Map<String, String>> uploadThumbnail(@RequestParam("file") MultipartFile file, @RequestParam("courseId")  Long courseId) {
         try {
-            String fileUrl = fileStorageService.uploadFile(file);
+            String fileUrl = fileStorageService.uploadCourseThumbnailFile(file, courseId);
             return ResponseEntity.ok(Collections.singletonMap("url", fileUrl));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Collections.singletonMap("error", "Failed to upload file"));

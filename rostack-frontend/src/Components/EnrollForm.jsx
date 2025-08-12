@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../Components/AuthContext'
+import { useAuth } from './AuthContext'
 import axiosInstance from '../util/AxiosInstance';
 
 const EnrollForm = () => {
@@ -29,13 +29,14 @@ const EnrollForm = () => {
     setSuccess('');
 
     try {
-      const response = await axiosInstance.post('http://localhost:8080/api/auth/register', formData);
+      const response = await axiosInstance.post('/auth/register', formData);
       setSuccess('User registered successfully!');
       const { token, userDetails } = response.data;
       const role = userDetails.authorities[0].authority;
       localStorage.setItem('token', token);
       localStorage.setItem('role', role);
       setRole(role)
+      navigate(`/payment/${encodeURIComponent(course?.title)}`, { state: course });
     } catch (err) {
       console.error(err);
       if (err.response?.data) {
@@ -55,8 +56,7 @@ const EnrollForm = () => {
         setError('Server not responding. Please try again later.');
       }
     }
-    if (success)
-      navigate(`/payment/${encodeURIComponent(course?.title)}`, { state: { ...formData, course } });
+
   };
 
   return (

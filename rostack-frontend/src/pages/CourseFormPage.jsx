@@ -28,7 +28,7 @@ const CourseFormPage = ({ mode }) => {
     const fetchCourse = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axiosInstance.get(`http://localhost:8080/api/courses/${id}`, {
+        const res = await axiosInstance.get(`/courses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setCourse(res.data);
@@ -53,15 +53,18 @@ const CourseFormPage = ({ mode }) => {
     const key = `${mIdx}_${rIdx}`;
     setExpandedResources((prev) => ({ ...prev, [key]: !prev[key] }));
   };
+
   const [thumbnailFile, setThumbnailFile] = useState(null)
+
   const uploadThumbnail = async () => {
     if (!thumbnailFile) return
     const formData = new FormData()
     formData.append('file', thumbnailFile)
+    formData.append('courseId', id)
 
     try {
       const token = localStorage.getItem('token')
-      const res = await axios.post('http://localhost:8080/api/courses/upload/thumbnail', formData, {
+      const res = await axiosInstance.post('/courses/upload/thumbnail', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'
@@ -121,7 +124,7 @@ const CourseFormPage = ({ mode }) => {
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:8080/api/courses/${id}`, course, {
+      await axiosInstance.put(`/courses/${id}`, course, {
         headers: { Authorization: `Bearer ${token}` },
       });
       toast.success('Course updated successfully!');
@@ -130,6 +133,8 @@ const CourseFormPage = ({ mode }) => {
       toast.error('Failed to update course');
     }
   };
+ 
+  const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
   return (
     <Container className="my-4">
@@ -182,7 +187,7 @@ const CourseFormPage = ({ mode }) => {
           </div>
           {course.thumbnail && (
             <div className="mt-2">
-              <img src={`http://localhost:8080/${course.thumbnail}`} alt="Thumbnail Preview" width="200" height="200" className="rounded shadow" />
+              <img src={`/${course.thumbnail}`} alt="Thumbnail Preview" width="200" height="200" className="rounded shadow" />
             </div>
           )}
         </Form.Group>

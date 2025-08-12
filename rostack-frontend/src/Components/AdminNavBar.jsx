@@ -16,7 +16,7 @@ const AdminNavbar = () => {
   return (
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
-        <Navbar.Brand as={Link} to="/">eLearn Admin</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/">Heetro</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse>
           <Nav className="me-auto">
